@@ -10,7 +10,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0c0c0c;
+      --bg: #0d0c0b;
       --surface: #111111;
       --border: #1c1c1c;
       --text-primary: #f5f5f5;
@@ -30,6 +30,25 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    /* NOISE TEXTURE */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 128px 128px;
+    }
+
+    /* MAIN CONTENT WRAPPER */
+    .content-root {
+      position: relative;
+      z-index: 1;
+    }
+
     /* NAV */
     nav {
       position: sticky;
@@ -39,7 +58,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(12, 12, 12, 0.9);
+      background: rgba(13, 12, 11, 0.9);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
@@ -128,8 +147,21 @@
       letter-spacing: 0.01em;
       transition: opacity 0.15s;
       white-space: nowrap;
+      position: relative;
+      overflow: hidden;
     }
     .btn-primary:hover { opacity: 0.88; }
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+    }
+    .btn-primary:hover::after {
+      transform: translateX(100%);
+    }
     .btn-ghost {
       font-family: 'DM Sans', sans-serif;
       font-weight: 500;
@@ -220,6 +252,57 @@
       50% { opacity: 0; }
     }
 
+    /* STATS BAR */
+    .stats-bar {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: #121110;
+    }
+    .stats-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 48px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      min-width: 120px;
+    }
+    .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.2em, 4vw, 3.2em);
+      font-weight: 700;
+      letter-spacing: -2px;
+      color: var(--amber);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.8em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 500;
+      text-align: center;
+    }
+    .stat-divider {
+      width: 1px;
+      height: 48px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+    @media (max-width: 700px) {
+      .stat-divider { display: none; }
+      .stats-inner { justify-content: center; gap: 40px; }
+    }
+
     /* SECTION STRUCTURE */
     .section-outer { border-top: 1px solid var(--border); }
     .section-inner {
@@ -244,6 +327,167 @@
     .section-sub {
       font-size: 1em;
       color: var(--text-secondary);
+    }
+
+    /* OVERNIGHT TIMELINE */
+    .timeline-scroll {
+      margin-top: 40px;
+      overflow-x: auto;
+      padding-bottom: 16px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .timeline-track {
+      display: flex;
+      gap: 0;
+      min-width: max-content;
+      padding: 8px 0 8px 0;
+      position: relative;
+    }
+    .timeline-track::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 24px;
+      right: 24px;
+      height: 1px;
+      background: var(--border);
+      transform: translateY(-8px);
+    }
+    .timeline-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 200px;
+      flex-shrink: 0;
+      padding: 0 8px;
+      position: relative;
+    }
+    .timeline-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      white-space: nowrap;
+    }
+    .timeline-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      border: 2px solid #222;
+      z-index: 1;
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+    .timeline-node.active .timeline-dot {
+      background: var(--amber);
+      border-color: var(--amber);
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+    }
+    .timeline-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      width: 184px;
+      transition: border-color 0.15s;
+    }
+    .timeline-card:hover { border-color: #2a2a2a; }
+    .timeline-node.active .timeline-card { border-color: rgba(245,158,11,0.3); }
+    .timeline-tag {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .timeline-tag.highlight { color: var(--amber); }
+    .timeline-event {
+      font-size: 0.82em;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* BENTO FEATURES */
+    .bento-grid {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 12px;
+    }
+    @media (max-width: 800px) {
+      .bento-grid { grid-template-columns: 1fr 1fr; }
+      .bento-large { grid-column: span 2; }
+    }
+    @media (max-width: 500px) {
+      .bento-grid { grid-template-columns: 1fr; }
+      .bento-large { grid-column: span 1; }
+    }
+    .bento-card {
+      background: #121110;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 24px;
+      transition: border-color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .bento-card:hover { border-color: #252320; }
+    .bento-large {
+      grid-row: span 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 32px 28px;
+      background: #131210;
+    }
+    .bento-tag {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--amber);
+      margin-bottom: 16px;
+    }
+    .bento-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.3em;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--text-primary);
+      line-height: 1.25;
+      margin-bottom: 14px;
+    }
+    .bento-large .bento-title {
+      font-size: 1.8em;
+      letter-spacing: -1px;
+    }
+    .bento-desc {
+      font-size: 0.87em;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .bento-stat-row {
+      margin-top: 32px;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .bento-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 3em;
+      font-weight: 700;
+      letter-spacing: -2px;
+      color: var(--amber);
+      line-height: 1;
+    }
+    .bento-num-label {
+      font-size: 0.87em;
+      color: var(--text-muted);
     }
 
     /* VIDEO */
@@ -529,9 +773,22 @@
     }
     .delivery-tip p { font-size: 0.88em; color: var(--text-muted); line-height: 1.7; }
     .delivery-tip strong { color: var(--text-primary); }
+
+    /* SCROLL FADE-IN ANIMATIONS */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
+
+  <div class="content-root">
 
   <!-- NAV -->
   <nav>
@@ -594,8 +851,109 @@
     </div>
   </div>
 
+  <!-- STATS BAR -->
+  <div class="stats-bar fade-up">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <div class="stat-num" data-target="99">0</div>
+        <div class="stat-label">memory files</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num" data-target="5">0</div>
+        <div class="stat-label">nightly learning loops</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num" data-target="3">0</div>
+        <div class="stat-label">months in production</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num" data-target="67">0</div>
+        <div class="stat-label">dollars. one time.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERNIGHT TIMELINE -->
+  <div class="section-outer fade-up">
+    <div class="section-inner">
+      <h2 class="section-h2">What Happened While You Slept</h2>
+      <p class="section-sub">Real entries from a production run. April 11, 2026.</p>
+      <div class="timeline-scroll">
+        <div class="timeline-track">
+
+          <div class="timeline-node">
+            <div class="timeline-time">12:07 AM</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-tag">reflection</div>
+              <div class="timeline-event">Nightly self-assessment written. 3 wins, 2 gaps identified.</div>
+            </div>
+          </div>
+
+          <div class="timeline-node">
+            <div class="timeline-time">01:15 AM</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-tag">memory</div>
+              <div class="timeline-event">Memory compiler ran. 3 files updated from raw session logs.</div>
+            </div>
+          </div>
+
+          <div class="timeline-node">
+            <div class="timeline-time">02:03 AM</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-tag">research</div>
+              <div class="timeline-event">Autoresearch loop: 10 prompt variations tested → 8.1/10 avg. Top 3 kept.</div>
+            </div>
+          </div>
+
+          <div class="timeline-node">
+            <div class="timeline-time">03:45 AM</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-tag">skill</div>
+              <div class="timeline-event">New skill drafted: tweet-scheduler. Auto-tested against 4 edge cases.</div>
+            </div>
+          </div>
+
+          <div class="timeline-node">
+            <div class="timeline-time">07:15 AM</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-tag">intel</div>
+              <div class="timeline-event">YouTube autolearn: 4 videos processed. Cushing + AI ops notes filed.</div>
+            </div>
+          </div>
+
+          <div class="timeline-node">
+            <div class="timeline-time">07:22 AM</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-tag">brief</div>
+              <div class="timeline-event">Daily brief drafted. Gmail draft waiting. Calendar synced. Priorities ranked.</div>
+            </div>
+          </div>
+
+          <div class="timeline-node active">
+            <div class="timeline-time">08:00 AM</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-tag highlight">you wake up</div>
+              <div class="timeline-event">Everything is already done.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- VIDEO SECTION -->
-  <div id="video" class="section-outer">
+  <div id="video" class="section-outer fade-up">
     <div class="section-inner">
       <h2 class="section-h2">See It Running</h2>
       <p class="section-sub">Watch the agent work through a full overnight cycle — live logs, memory files, morning brief.</p>
@@ -612,7 +970,7 @@
   </div>
 
   <!-- WHAT'S INSIDE -->
-  <div class="section-outer">
+  <div class="section-outer fade-up">
     <div class="section-inner">
       <h2 class="section-h2">What's Inside</h2>
       <p class="section-sub">12 parts. Written by the agent about itself.</p>
@@ -718,8 +1076,53 @@
     </div>
   </div>
 
+  <!-- BENTO FEATURES -->
+  <div class="section-outer fade-up">
+    <div class="section-inner">
+      <h2 class="section-h2">How It Works</h2>
+      <p class="section-sub">Four systems. One agent. Running every day.</p>
+      <div class="bento-grid">
+
+        <div class="bento-card bento-large">
+          <div class="bento-tag">Core Architecture</div>
+          <div class="bento-title">Four memory layers.<br>Nine personas.<br>One brain.</div>
+          <div class="bento-desc">Every interaction reads from flat files, not volatile RAM. Context survives restarts, compaction, and sleep.</div>
+          <div class="bento-stat-row">
+            <span class="bento-num">99</span>
+            <span class="bento-num-label">persistent memory files</span>
+          </div>
+        </div>
+
+        <div class="bento-card">
+          <div class="bento-tag">Cost Stack</div>
+          <div class="bento-title">$100/mo flat.</div>
+          <div class="bento-desc">Claude Max SDK routing. Same model, 3–6× cheaper than direct API.</div>
+        </div>
+
+        <div class="bento-card">
+          <div class="bento-tag">Self-Learning</div>
+          <div class="bento-title">Gets better<br>every night.</div>
+          <div class="bento-desc">5 overnight loops: reflection, memory compile, autoresearch, skill testing, YouTube intel.</div>
+        </div>
+
+        <div class="bento-card">
+          <div class="bento-tag">Discord Routing</div>
+          <div class="bento-title">10 personas.<br>One server.</div>
+          <div class="bento-desc">Rex handles Cushing ops. Roy handles finance. Tank codes. Scout researches. All sharing one context system.</div>
+        </div>
+
+        <div class="bento-card">
+          <div class="bento-tag">GitHub Scaffold</div>
+          <div class="bento-title">Clone. Configure. Run.</div>
+          <div class="bento-desc">Full working codebase. Service files, templates, autoresearch loop. Up in under 10 minutes.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <!-- COST PROOF -->
-  <div class="section-outer">
+  <div class="section-outer fade-up">
     <div class="section-inner">
       <h2 class="section-h2">The Cost Proof</h2>
       <p class="section-sub">Same Claude. Official product. Claude Max subscription via SDK.</p>
@@ -742,7 +1145,7 @@
   </div>
 
   <!-- INCLUDED -->
-  <div class="section-outer">
+  <div class="section-outer fade-up">
     <div class="section-inner">
       <h2 class="section-h2">What's Included</h2>
       <p class="section-sub">Everything you need to ship a production agent this week.</p>
@@ -777,7 +1180,7 @@
   </div>
 
   <!-- FINAL CTA -->
-  <div class="final-cta-section">
+  <div class="final-cta-section fade-up">
     <div class="final-cta-inner">
       <h2 class="final-h2">Ship your agent this week.</h2>
       <p class="final-sub">Not a tutorial. Not a demo. A production blueprint from the machine that runs it.</p>
@@ -871,6 +1274,8 @@
     </div>
   </footer>
 
+  </div><!-- end .content-root -->
+
   <script>
     if (window.location.search.includes('purchase=success')) {
       document.getElementById('delivery-portal').style.display = 'block';
@@ -878,6 +1283,39 @@
         document.getElementById('delivery-portal').scrollIntoView({ behavior: 'smooth' });
       }, 100);
     }
+
+    // Animate stat counters
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.dataset.target);
+          const duration = 1200;
+          const start = Date.now();
+          const tick = () => {
+            const progress = Math.min((Date.now() - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.floor(eased * target);
+            if (progress < 1) requestAnimationFrame(tick);
+            else el.textContent = target;
+          };
+          tick();
+          statObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.stat-num').forEach(el => statObserver.observe(el));
+
+    // Scroll fade-in
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          fadeObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
   </script>
 
 </body>
