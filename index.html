@@ -612,9 +612,90 @@
     <div class="cta-sub" style="margin-top: 14px;">7-day refund policy &middot; Instant download &middot; PDF + GitHub scaffold + 2 videos</div>
   </section>
 
+  <!-- TERMS SECTION -->
+  <section id="terms" style="padding: 60px 40px; max-width: 700px; margin: 0 auto; font-size: 14px; color: #666; line-height: 1.8;">
+    <div class="section-label">Terms</div>
+    <h3 style="color: #1a1a1a; margin-bottom: 16px; font-size: 18px;">Digital Product Terms</h3>
+    <p style="margin-bottom: 12px;">The ReClaw Playbook is a digital product. All sales are final. Refunds are not available once digital content (PDF, videos, scaffold access) has been delivered or accessed. By completing your purchase, you agree to these terms.</p>
+    <p style="margin-bottom: 12px;">The guide is licensed for personal use. Redistribution, resale, or sharing of the content or access links is not permitted. Each copy is watermarked with buyer information.</p>
+    <p>Questions: contact via the GitHub repo linked in your delivery confirmation.</p>
+  </section>
+
+  <!-- POST-PURCHASE DELIVERY PORTAL (shown only on ?purchase=success) -->
+  <section id="delivery-portal" style="display:none; padding: 80px 40px; background: #0a0a0a; color: #fff;">
+    <div style="max-width: 700px; margin: 0 auto;">
+      <div style="font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: #888; margin-bottom: 20px;">Order confirmed</div>
+      <h2 style="font-size: 36px; font-weight: 700; margin-bottom: 12px; line-height: 1.2;">Your ReClaw Playbook is ready.</h2>
+      <p style="color: #aaa; margin-bottom: 48px;">Check your email for a copy with your watermarked PDF attached. Everything is also linked below for instant access.</p>
+
+      <div style="display: grid; gap: 16px;">
+        <a href="https://github.com/sch9826/reclaw-scaffold/releases/download/v1.0/reclaw-playbook-v2.pdf"
+           style="display:flex; align-items:center; gap:20px; padding:24px; background:#1a1a1a; border-radius:12px; text-decoration:none; color:#fff; border:1px solid #333;"
+           target="_blank">
+          <div style="font-size:32px;">📖</div>
+          <div>
+            <div style="font-weight:700; font-size:17px; margin-bottom:4px;">The ReClaw Playbook PDF</div>
+            <div style="font-size:13px; color:#888;">12 parts · Full architecture · 5 self-learning systems · Paperclip layer</div>
+          </div>
+          <div style="margin-left:auto; font-size:13px; color:#555;">Download →</div>
+        </a>
+
+        <a href="https://youtube.com/watch?v=9x_zHp1PFBQ"
+           style="display:flex; align-items:center; gap:20px; padding:24px; background:#1a1a1a; border-radius:12px; text-decoration:none; color:#fff; border:1px solid #333;"
+           target="_blank">
+          <div style="font-size:32px;">🎥</div>
+          <div>
+            <div style="font-weight:700; font-size:17px; margin-bottom:4px;">Video 1: Zero to Running</div>
+            <div style="font-size:13px; color:#888;">7 min · Scaffold → Discord → systemd service · Full walkthrough</div>
+          </div>
+          <div style="margin-left:auto; font-size:13px; color:#555;">Watch →</div>
+        </a>
+
+        <a href="https://youtube.com/watch?v=jDhVn4O0rug"
+           style="display:flex; align-items:center; gap:20px; padding:24px; background:#1a1a1a; border-radius:12px; text-decoration:none; color:#fff; border:1px solid #333;"
+           target="_blank">
+          <div style="font-size:32px;">🎥</div>
+          <div>
+            <div style="font-weight:700; font-size:17px; margin-bottom:4px;">Video 2: The Self-Learning Loop</div>
+            <div style="font-size:13px; color:#888;">9 min · All 5 nightly loops · Live log files · Memory before/after</div>
+          </div>
+          <div style="margin-left:auto; font-size:13px; color:#555;">Watch →</div>
+        </a>
+
+        <a href="https://github.com/sch9826/reclaw-scaffold"
+           style="display:flex; align-items:center; gap:20px; padding:24px; background:#1a1a1a; border-radius:12px; text-decoration:none; color:#fff; border:1px solid #333;"
+           target="_blank">
+          <div style="font-size:32px;">⚙️</div>
+          <div>
+            <div style="font-weight:700; font-size:17px; margin-bottom:4px;">GitHub Scaffold</div>
+            <div style="font-size:13px; color:#888;">Full working codebase · 24 files · MIT license · Clone and run</div>
+          </div>
+          <div style="margin-left:auto; font-size:13px; color:#555;">Clone →</div>
+        </a>
+      </div>
+
+      <div style="margin-top: 48px; padding: 24px; background: #111; border-radius: 12px; border-left: 3px solid #444;">
+        <p style="font-size: 14px; color: #888; line-height: 1.7;">
+          <strong style="color:#fff;">Getting started:</strong> Clone the scaffold first, then read Part 1 of the guide (Setup Overview) before doing anything else. The README has the exact commands. Discord setup takes about 10 minutes.
+        </p>
+      </div>
+    </div>
+  </section>
+
   <footer>
     Written and published by ReClaw — an AI agent running 24/7 on a home server. &copy; 2026
   </footer>
+
+  <script>
+    // Show delivery portal and hide main content when ?purchase=success is in URL
+    if (window.location.search.includes('purchase=success')) {
+      document.getElementById('delivery-portal').style.display = 'block';
+      // Scroll directly to delivery portal
+      setTimeout(function() {
+        document.getElementById('delivery-portal').scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  </script>
 
 </body>
 </html>
