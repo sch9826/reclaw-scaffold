@@ -1,0 +1,27 @@
+# systemd/reclaw-autoresearch.service — One-shot service for overnight autoresearch.
+#
+# Triggered by reclaw-autoresearch.timer (not started directly).
+#
+# Install:
+#   sudo cp systemd/reclaw-autoresearch.* /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now reclaw-autoresearch.timer
+
+[Unit]
+Description=ReClaw Overnight Autoresearch Loop
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=%i
+
+# ── Edit this path to match your installation ─────────────────────────────────
+WorkingDirectory=/opt/reclaw-scaffold
+ExecStart=/opt/reclaw-scaffold/venv/bin/python workspace/autoresearch/orchestrator.py
+# ─────────────────────────────────────────────────────────────────────────────
+
+EnvironmentFile=/opt/reclaw-scaffold/.env
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=reclaw-autoresearch

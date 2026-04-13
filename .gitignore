@@ -1,0 +1,44 @@
+# Environment and secrets
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv/
+pip-wheel-metadata/
+*.egg-info/
+dist/
+build/
+
+# Logs and runtime data
+workspace/memory/*.log
+workspace/memory/conversations.md
+workspace/autoresearch/logs/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Persona routing (contains channel IDs — keep private)
+workspace/persona_routing.json
+
+# Soul files (may contain personal info)
+workspace/souls/
+
+# User and directive files (contain personal information)
+workspace/USER.md
+workspace/SOUL.md
+workspace/DIRECTIVE.md
+workspace/AGENTS.md

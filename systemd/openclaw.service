@@ -1,0 +1,40 @@
+# systemd/openclaw.service — Production service file for ReClaw Scaffold.
+#
+# Install:
+#   sudo cp systemd/openclaw.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now openclaw
+#
+# View logs:
+#   journalctl -u openclaw -f
+
+[Unit]
+Description=ReClaw Personal AI Agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=%i
+
+# ── Edit these two paths to match your installation ──────────────────────────
+WorkingDirectory=/opt/reclaw-scaffold
+ExecStart=/opt/reclaw-scaffold/venv/bin/python src/main.py
+# ─────────────────────────────────────────────────────────────────────────────
+
+EnvironmentFile=/opt/reclaw-scaffold/.env
+
+# Restart automatically on crash
+Restart=on-failure
+RestartSec=10s
+
+# Give the process time to shut down cleanly
+TimeoutStopSec=30
+
+# Write logs to the journal (accessible via journalctl)
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=openclaw
+
+[Install]
+WantedBy=multi-user.target

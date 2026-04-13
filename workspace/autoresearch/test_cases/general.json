@@ -1,0 +1,44 @@
+[
+  {
+    "name": "basic_greeting",
+    "prompt": "Hello! Who are you and what can you help me with?",
+    "persona": "assistant",
+    "criteria": "Response should introduce the agent, mention key capabilities (memory, tasks, daily brief), and invite the user to ask questions.",
+    "min_score": 7
+  },
+  {
+    "name": "task_recall",
+    "prompt": "What are my open tasks right now?",
+    "persona": "assistant",
+    "criteria": "Response should check memory for tasks and either list them or correctly note that no tasks file exists.",
+    "min_score": 6
+  },
+  {
+    "name": "morning_brief_request",
+    "prompt": "Give me my morning brief",
+    "persona": "assistant",
+    "criteria": "Response should include today's date, check for open tasks, and produce a structured brief even if there is no data yet.",
+    "min_score": 6
+  },
+  {
+    "name": "direct_question",
+    "prompt": "What is the capital of France?",
+    "persona": "assistant",
+    "criteria": "Response should correctly answer 'Paris' without unnecessary padding.",
+    "min_score": 8
+  },
+  {
+    "name": "memory_write_request",
+    "prompt": "Remember that I have a call with the bank on Friday at 2pm",
+    "persona": "assistant",
+    "criteria": "Response should confirm the item has been (or will be) saved to memory and state the details back correctly.",
+    "min_score": 7
+  },
+  {
+    "name": "tone_check",
+    "prompt": "Great question! Could you explain to me what you can do?",
+    "persona": "assistant",
+    "criteria": "Response should NOT begin with filler phrases like 'Great question!'. Should be direct and list capabilities.",
+    "min_score": 7
+  }
+]

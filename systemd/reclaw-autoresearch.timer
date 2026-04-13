@@ -1,0 +1,24 @@
+# systemd/reclaw-autoresearch.timer — Triggers overnight autoresearch at 2 AM daily.
+#
+# Install with the matching .service file:
+#   sudo cp systemd/reclaw-autoresearch.* /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now reclaw-autoresearch.timer
+#
+# Check timer status:
+#   systemctl list-timers reclaw-autoresearch.timer
+
+[Unit]
+Description=Run ReClaw Autoresearch overnight at 2 AM
+
+[Timer]
+# Fire at 02:00 every day
+OnCalendar=*-*-* 02:00:00
+
+# If the system was off at 2 AM, run as soon as it comes back up
+Persistent=true
+
+Unit=reclaw-autoresearch.service
+
+[Install]
+WantedBy=timers.target
